@@ -1,0 +1,14 @@
+<RCC>
+    <qresource prefix="/">
+        <file>MainWindow.qml</file>
+        <file>PageLibrary.qml</file>
+        <file>PageDetail.qml</file>
+        <file>PageReader.qml</file>
+        <file>Pages.qml</file>
+        <file>Entry.qml</file>
+        <file>TagEntry.qml</file>
+        <file>Tag.qml</file>
+        <file>BrowserMangaGrid.qml</file>
+        <file>BrowserChapterGrid.qml</file>
+    </qresource>
+</RCC>
