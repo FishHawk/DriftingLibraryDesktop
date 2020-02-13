@@ -47,7 +47,6 @@ Rectangle {
         id: dialog
         title: "Set Library Url"
         width: 800
-        modality: Qt.WindowModality
         standardButtons: Dialog.Ok | Dialog.Cancel
 
         RowLayout {
