@@ -4,13 +4,8 @@
 #include <QDir>
 #include <QUrl>
 
-class Library {
+class LibraryAddress {
 public:
-    static Library *getSingleton() {
-        static auto library = new Library();
-        return library;
-    }
-
     QUrl libraryUrl() const { return m_library_url; }
     void setLibraryUrl(QUrl library_url) { m_library_url = library_url; }
 
@@ -27,8 +22,10 @@ public:
                chapter_title + '/';
     }
 
+    LibraryAddress() = default;
+    LibraryAddress(QUrl library_url) : m_library_url(library_url) {};
+
 private:
-    Library() = default;
     QUrl m_library_url;
 };
 

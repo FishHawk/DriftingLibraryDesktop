@@ -1,16 +1,19 @@
 #ifndef MANGA_LIST_VIEW_MODEL
 #define MANGA_LIST_VIEW_MODEL
 
+#include <QAbstractListModel>
 #include <QObject>
 #include <QUrl>
-#include <QAbstractListModel>
+
+#include "library.hpp"
+#include "view_model/tag_filter.hpp"
 
 struct MangaSummary {
     QString title;
     QUrl thumb;
 };
 
-class MangaListViewModel : public QAbstractListModel {
+class MangaLibraryViewModel : public QAbstractListModel {
     Q_OBJECT
 
 public:
@@ -19,7 +22,8 @@ public:
         ThumbRole
     };
 
-    explicit MangaListViewModel(QUrl library_url);
+    explicit MangaLibraryViewModel(LibraryAddress library_address);
+    ~MangaLibraryViewModel();
 
     int rowCount(const QModelIndex &) const override {
         return m_mangas.size();
@@ -37,6 +41,8 @@ public:
             return QVariant();
     }
 
+    Q_INVOKABLE void query(QString patterns);
+
 protected:
     QHash<int, QByteArray> roleNames() const override {
         QHash<int, QByteArray> roles;
@@ -46,8 +52,13 @@ protected:
     };
 
 private:
+    void load();
+    void clear();
+
     int m_size;
-    QList<MangaSummary *> m_mangas;
+    LibraryAddress m_library_address;
+    TagFilter m_tag_filter;
+    std::vector<MangaSummary *> m_mangas;
 };
 
 #endif

@@ -11,7 +11,8 @@
 #include <QUrl>
 #include <QtCore/QObject>
 
-#include "view_model/manga_list_view_model.hpp"
+#include "library.hpp"
+#include "view_model/manga_library_view_model.hpp"
 #include "view_model/manga_detail_view_model.hpp"
 #include "view_model/manga_reader_view_model.hpp"
 
@@ -20,13 +21,13 @@ class Backend : public QObject {
 
 public:
     Q_PROPERTY(QUrl libraryUrl READ libraryUrl NOTIFY libraryUrlChanged)
-    Q_PROPERTY(MangaListViewModel* mangaListViewModel MEMBER m_manga_list_view_model NOTIFY mangaListViewModelChanged)
+    Q_PROPERTY(MangaLibraryViewModel* mangaLibraryViewModel MEMBER m_manga_library_view_model NOTIFY mangaLibraryViewModelChanged)
     Q_PROPERTY(MangaDetailViewModel *mangaDetailViewModel MEMBER m_manga_detail_view_model NOTIFY mangaDetailViewModelChanged)
     Q_PROPERTY(MangaReaderViewModel *mangaReaderViewModel MEMBER m_manga_reader_view_model NOTIFY mangaReaderViewModelChanged)
 
 signals:
     void libraryUrlChanged();
-    void mangaListViewModelChanged();
+    void mangaLibraryViewModelChanged();
     void mangaDetailViewModelChanged();
     void mangaReaderViewModelChanged();
 
@@ -50,7 +51,8 @@ public:
 
 private:
     QSettings m_settings{"settings"};
-    MangaListViewModel *m_manga_list_view_model;
+    LibraryAddress m_library_address;
+    MangaLibraryViewModel *m_manga_library_view_model;
     MangaDetailViewModel *m_manga_detail_view_model;
     MangaReaderViewModel *m_manga_reader_view_model;
 

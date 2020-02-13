@@ -13,18 +13,18 @@ Backend::Backend()
 }
 
 QUrl Backend::libraryUrl() {
-    return Library::getSingleton()->libraryUrl();
+    return m_library_address.libraryUrl();
 }
 
 bool Backend::setLibraryUrl(QString str) {
     auto library_url = QUrl::fromUserInput(str);
     if (library_url.isValid()) {
-        Library::getSingleton()->setLibraryUrl(library_url);
+        m_library_address.setLibraryUrl(library_url);
         m_settings.setValue("libraryUrl", library_url);
         emit libraryUrlChanged();
 
-        m_manga_list_view_model = new MangaListViewModel(library_url);
-        emit mangaListViewModelChanged();
+        m_manga_library_view_model = new MangaLibraryViewModel(library_url);
+        emit mangaLibraryViewModelChanged();
         return true;
     } else {
         return false;
@@ -32,7 +32,7 @@ bool Backend::setLibraryUrl(QString str) {
 }
 
 void Backend::openManga(QString manga_title) {
-    auto manga_url = Library::getSingleton()->mangaUrl(manga_title);
+    auto manga_url = m_library_address.mangaUrl(manga_title);
     auto new_view_model = new MangaDetailViewModel(manga_url);
 
     std::swap(new_view_model, m_manga_detail_view_model);
@@ -47,9 +47,9 @@ void Backend::openChapter(int collection_index, int chapter_index) {
 
     auto collection = m_manga_detail_view_model->m_collections[m_collection_index];
     auto chapter = collection->m_chapters[m_chapter_index];
-    auto chapter_url = Library::getSingleton()->chapterUrl(m_manga_detail_view_model->m_title,
-                                                           collection->m_title,
-                                                           chapter->m_title);
+    auto chapter_url = m_library_address.chapterUrl(m_manga_detail_view_model->m_title,
+                                                    collection->m_title,
+                                                    chapter->m_title);
     auto new_view_model = new MangaReaderViewModel(chapter_url);
 
     std::swap(new_view_model, m_manga_reader_view_model);

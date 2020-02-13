@@ -13,7 +13,8 @@ find_package(Qt5 ${QT_MIN_VERSION} COMPONENTS REQUIRED
 
 add_executable(drifting_library_desktop
         view/resources.qrc
-        view_model/manga_list_view_model.cpp
+        view_model/tag_view_model.cpp
+        view_model/manga_library_view_model.cpp
         view_model/manga_detail_view_model.cpp
         view_model/manga_reader_view_model.cpp
         backend.cpp

@@ -12,10 +12,20 @@ Rectangle {
     ColumnLayout {
         anchors.fill: parent
 
+        TextField {
+            id: queryTextInput
+            Layout.alignment: Qt.AlignHCenter
+            Layout.preferredWidth: 800
+            placeholderText: "Search Library"
+            onAccepted: {
+                Backend.mangaLibraryViewModel.query(text)
+                focus = false
+            }
+        }
         BrowserMangaGrid {
             Layout.fillWidth: true
             Layout.fillHeight: true
-            model: Backend.mangaListViewModel
+            model: Backend.mangaLibraryViewModel
             onMangaChoosed: {
                 Backend.openManga(mangaSummary)
                 pages.navigate(Pages.Page.Detail)
@@ -50,6 +60,7 @@ Rectangle {
             }
         }
         onAccepted: {
+            queryTextInput.text = "";
             Backend.setLibraryUrl(inputUrl.text)
         }
     }
