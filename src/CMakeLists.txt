@@ -11,7 +11,7 @@ find_package(Qt5 ${QT_MIN_VERSION} COMPONENTS REQUIRED
         Quick
         QuickControls2)
 
-add_executable(drifting_library_desktop
+add_executable(drifting-library-desktop
         view/resources.qrc
         view_model/tag_view_model.cpp
         view_model/manga_library_view_model.cpp
@@ -21,9 +21,9 @@ add_executable(drifting_library_desktop
         backend.cpp
         main.cpp)
 
-target_compile_definitions(drifting_library_desktop PRIVATE $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:QT_QML_DEBUG>)
+target_compile_definitions(drifting-library-desktop PRIVATE $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:QT_QML_DEBUG>)
 
-target_link_libraries(drifting_library_desktop
+target_link_libraries(drifting-library-desktop
         PRIVATE
         Qt5::Core
         Qt5::Widgets
