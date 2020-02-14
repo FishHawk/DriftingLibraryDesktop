@@ -59,13 +59,13 @@ void Backend::openChapter(int collection_index, int chapter_index) {
 }
 
 bool Backend::openPrevChapter() {
-    auto collections = m_manga_detail_view_model->m_collections;
-    auto chapters = collections[m_collection_index]->m_chapters;
     if (m_chapter_index > 0) {
         m_chapter_index -= 1;
     } else if (m_collection_index > 0) {
         m_collection_index -= 1;
-        m_chapter_index = 0;
+        auto collections = m_manga_detail_view_model->m_collections;
+        auto chapters = collections[m_collection_index]->m_chapters;
+        m_chapter_index = chapters.length() - 1;
     } else {
         return false;
     }
