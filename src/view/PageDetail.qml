@@ -11,12 +11,13 @@ RowLayout {
 
     spacing: 0
 
-    Pane {
+    Item {
         Layout.preferredWidth: 400
         Layout.fillHeight: true
 
         ColumnLayout {
             anchors.fill: parent
+            anchors.margins: 20
             spacing: 10
 
             Button {
