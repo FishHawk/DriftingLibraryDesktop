@@ -1,4 +1,4 @@
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
@@ -17,6 +17,7 @@ add_executable(drifting_library_desktop
         view_model/manga_library_view_model.cpp
         view_model/manga_detail_view_model.cpp
         view_model/manga_reader_view_model.cpp
+        view_model/util.cpp
         backend.cpp
         main.cpp)
 

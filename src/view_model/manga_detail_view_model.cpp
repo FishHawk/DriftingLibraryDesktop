@@ -6,6 +6,7 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 
+#include "view_model/util.hpp"
 
 QUrl detectThumb(QDir manga_dir) {
     // need auto detect
@@ -69,7 +70,7 @@ void MangaDetailViewModel::loadContentFile(QDir manga_dir) {
 MangaDetailViewModel::MangaDetailViewModel(QUrl manga_url) {
     QDir manga_dir(manga_url.toLocalFile());
     m_title = manga_dir.dirName();
-    m_thumb = detectThumb(manga_dir);
+    m_thumb = QUrl::fromLocalFile(util::search_thumb(manga_dir));
 
     loadContentFile(manga_dir);
     TagViewModel::createDefaultFile(manga_dir);
