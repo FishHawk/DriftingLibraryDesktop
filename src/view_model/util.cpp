@@ -1,7 +1,13 @@
 #include "util.hpp"
 
+QStringList util::image_name_filters() {
+    return QStringList() << "*.jpg"
+                         << "*.jpeg"
+                         << "*.png";
+}
+
 QString util::search_thumb(QDir dir, unsigned int depth) {
-    auto image_files = dir.entryList(QStringList() << "*.jpg", QDir::Files, QDir::Name);
+    auto image_files = dir.entryList(util::image_name_filters(), QDir::Files, QDir::Name);
     if (!image_files.isEmpty())
         return dir.filePath(image_files.front());
     else if (depth > 0) {
