@@ -32,11 +32,9 @@ Item {
     }
     function openMenu() {
         previewPanel.open()
-        console.log("open m")
     }
     function closeMenu() {
         previewPanel.close()
-        console.log("close m")
     }
 
     focus: pages.isPage(Pages.Page.Reader)
@@ -46,11 +44,25 @@ Item {
     Keys.onDownPressed: closeMenu()
 
     Image {
+        id: image
         anchors.fill: parent
+        visible: viewModel.images.length != 0
         fillMode: Image.PreserveAspectFit
-        source: viewModel.url + viewModel.images[index]
+        source: viewModel.images.length != 0 ? viewModel.url + viewModel.images[index] : ""
         // need test, to reduce Moire pattern
         // mipmap: true
+    }
+    Label {
+        anchors.centerIn: parent
+        visible: viewModel.images.length == 0
+        text: "No Image"
+        font.pointSize: 80
+    }
+    Label {
+        anchors.centerIn: parent
+        visible: image.status == Image.Error
+        text: "Image Error"
+        font.pointSize: 80
     }
 
     RowLayout {
