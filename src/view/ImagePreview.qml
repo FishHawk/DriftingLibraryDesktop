@@ -13,8 +13,7 @@ ListView {
     highlightMoveDuration: 200
     highlightMoveVelocity: -1
     delegate: Image {
-        height: parent.height
-        sourceSize.width: width; sourceSize.height: height
+        sourceSize.height: parent.height
         fillMode: Image.PreserveAspectFit
         smooth: false
         source: viewModel.url + modelData
