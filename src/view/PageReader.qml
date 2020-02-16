@@ -37,7 +37,7 @@ Item {
         previewPanel.close()
     }
 
-    focus: pages.isPage(Pages.Page.Reader)
+    focus: true
     Keys.onLeftPressed: prevPage()
     Keys.onRightPressed: nextPage()
     Keys.onUpPressed: openMenu()

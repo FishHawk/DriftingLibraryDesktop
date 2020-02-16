@@ -6,6 +6,7 @@ ListView {
     spacing: 2
     orientation: ListView.Horizontal
     model: viewModel.images
+    cacheBuffer: 1000000000
     preferredHighlightBegin: width / 2 - 200
     preferredHighlightEnd: width / 2 + 200
     highlightRangeMode: ListView.StrictlyEnforceRange

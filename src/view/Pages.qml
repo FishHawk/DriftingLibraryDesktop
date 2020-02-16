@@ -5,6 +5,7 @@ import QtQuick.Controls 2.14
 Loader {
     id: pages
     source: "PageLibrary.qml"
+    focus: true
     enum Page { Library, Detail, Reader }
 
     function navigate(page) {
@@ -18,14 +19,5 @@ Loader {
 
     function gotoPageReader(index) {
         setSource("PageReader.qml", {"index": index});
-    }
-
-    function isPage(page) {
-        if (page == Pages.Page.Library)
-            return source == "PageLibrary.qml"
-        else if (page == Pages.Page.Detail)
-            return source == "PageDetail.qml"
-        else if (page == Pages.Page.Reader)
-            return source == "PageReader.qml"
     }
 }
