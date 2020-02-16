@@ -75,7 +75,7 @@ Item {
     Popup {
         id: previewPanel
         x: 0
-        y: parent.height - height
+        y: parent.height - height + 1
         width: parent.width
         height: 400
         modal: true
