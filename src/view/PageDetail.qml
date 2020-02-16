@@ -45,34 +45,23 @@ RowLayout {
         Layout.fillHeight: true
         color: palette.base
 
-        ColumnLayout {
+        Loader {
+            id: y
             anchors.fill: parent
-
-            TabBar {
-                id: bar
-                Layout.fillWidth: true
-                Repeater {
-                    model: root.viewModel.collections
-                    TabButton {
-                        text: modelData.title
-                    }
-                }
+            signal chapterChoosed(int collection, int chapter, int index)
+            property var collections: root.viewModel.collections
+            property var preview: root.viewModel.preview
+            source: {
+                if (root.viewModel.depth == 0)
+                    return "BrowserChapterDepth0.qml"
+                else if (root.viewModel.depth == 1)
+                    return "BrowserChapterDepth1.qml"
+                else if (root.viewModel.depth == 2)
+                    return "BrowserChapterDepth2.qml"
             }
-
-            StackLayout {
-                Layout.fillWidth: true
-                Layout.fillHeight: true
-                currentIndex: bar.currentIndex
-                Repeater {
-                    model: root.viewModel.collections
-                    BrowserChapterGrid {
-                        model: modelData.chapters
-                        onChapterChoosed: {
-                            Backend.openChapter(index, chapterIndex)
-                            pages.navigate(Pages.Page.Reader)
-                        }
-                    }
-                }
+            onChapterChoosed: {
+                Backend.openChapter(collection, chapter)
+                pages.gotoPageReader(index)
             }
         }
     }

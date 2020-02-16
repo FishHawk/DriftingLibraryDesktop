@@ -7,7 +7,7 @@ GridView {
 
     property int cellSize: 180
 
-    signal chapterChoosed(int chapterIndex)
+    signal selected(string chapterIndex)
 
     cellWidth: 200 + 20
     cellHeight: 50 + 20
@@ -28,11 +28,11 @@ GridView {
                     anchors.rightMargin: 10
                     horizontalAlignment: Text.AlignHCenter
                     elide: Text.ElideRight
-                    text: modelData.title
+                    text: modelData
                 }
                 MouseArea {
                     anchors.fill: parent
-                    onClicked: chapterChoosed(index)
+                    onClicked: selected(index)
                 }
             }
         }

@@ -9,6 +9,9 @@
         <file>TagEntry.qml</file>
         <file>Tag.qml</file>
         <file>BrowserMangaGrid.qml</file>
-        <file>BrowserChapterGrid.qml</file>
+        <file>ButtonGrid.qml</file>
+        <file>BrowserChapterDepth0.qml</file>
+        <file>BrowserChapterDepth1.qml</file>
+        <file>BrowserChapterDepth2.qml</file>
     </qresource>
 </RCC>

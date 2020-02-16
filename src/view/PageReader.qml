@@ -8,7 +8,7 @@ Item {
     id: root
 
     property var viewModel: Backend.mangaReaderViewModel
-    property int index: 0
+    property int index
 
     function back() {
         index = 0
@@ -97,14 +97,16 @@ Item {
                 highlightMoveVelocity: -1
                 delegate: Image {
                     height: parent.height
+                    sourceSize.width: width; sourceSize.height: height
                     fillMode: Image.PreserveAspectFit
+                    smooth: false
                     source: viewModel.url + modelData
                     MouseArea {
                         anchors.fill: parent
                         onClicked: root.index = index
                     }
                 }
-                onCurrentIndexChanged: root.index = currentIndex
+                Component.onCompleted: currentIndex = root.index
 
                 MouseArea {
                     anchors.fill: parent
@@ -122,9 +124,7 @@ Item {
                 value: root.index
                 from: 0; to: viewModel.images.length - 1
                 stepSize: 1.0
-                onValueChanged: {
-                    root.index = parseInt(value)
-                }
+                onValueChanged: root.index = parseInt(value)
             }
         }
 

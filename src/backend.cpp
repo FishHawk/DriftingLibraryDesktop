@@ -49,7 +49,7 @@ void Backend::openChapter(int collection_index, int chapter_index) {
     auto chapter = collection->m_chapters[m_chapter_index];
     auto chapter_url = m_library_address.chapterUrl(m_manga_detail_view_model->m_title,
                                                     collection->m_title,
-                                                    chapter->m_title);
+                                                    chapter);
     auto new_view_model = new MangaReaderViewModel(chapter_url);
 
     std::swap(new_view_model, m_manga_reader_view_model);

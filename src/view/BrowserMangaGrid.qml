@@ -18,7 +18,10 @@ GridView {
         Image {
             x: 10; y: 10
             width: cellSize; height: cellSize/3*4
+            sourceSize.width: width; sourceSize.height: height
+            asynchronous: true
             fillMode: Image.PreserveAspectFit
+            smooth: false
             source: thumb
         }
         Label {

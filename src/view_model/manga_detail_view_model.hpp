@@ -6,30 +6,21 @@
 #include <QObject>
 #include <QUrl>
 
+#include "view_model/manga_reader_view_model.hpp"
 #include "view_model/tag_view_model.hpp"
 
-class MangaChapter : public QObject {
+class CollectionViewModel : public QObject {
     Q_OBJECT
 public:
     Q_PROPERTY(QString title MEMBER m_title CONSTANT)
+    Q_PROPERTY(QStringList chapters MEMBER m_chapters CONSTANT)
 
-    MangaChapter(QString title)
+    CollectionViewModel(QString title)
         : m_title(title) {}
+    void add_chapter(QString chapter) { m_chapters << chapter; };
 
     QString m_title;
-};
-
-class MangaCollection : public QObject {
-    Q_OBJECT
-public:
-    Q_PROPERTY(QString title MEMBER m_title CONSTANT)
-    Q_PROPERTY(QList<MangaChapter *> chapters MEMBER m_chapters CONSTANT)
-
-    MangaCollection(QString title)
-        : m_title(title) {}
-
-    QString m_title;
-    QList<MangaChapter *> m_chapters;
+    QStringList m_chapters;
 };
 
 class MangaDetailViewModel : public QObject {
@@ -37,7 +28,11 @@ class MangaDetailViewModel : public QObject {
 public:
     Q_PROPERTY(QString title MEMBER m_title CONSTANT)
     Q_PROPERTY(QUrl thumb MEMBER m_thumb CONSTANT)
-    Q_PROPERTY(QList<MangaCollection *> collections MEMBER m_collections CONSTANT)
+
+    Q_PROPERTY(int depth MEMBER m_depth CONSTANT)
+    Q_PROPERTY(QList<CollectionViewModel *> collections MEMBER m_collections CONSTANT)
+    Q_PROPERTY(MangaReaderViewModel *preview MEMBER m_preview CONSTANT)
+
     Q_PROPERTY(QList<TagViewModel *> tagEntrys MEMBER m_tags CONSTANT)
 
     MangaDetailViewModel() = default;
@@ -45,11 +40,12 @@ public:
 
     QString m_title;
     QUrl m_thumb;
-    QList<MangaCollection *> m_collections;
-    QList<TagViewModel *> m_tags;
 
-private:
-    void loadContentFile(QDir manga_dir);
+    int m_depth;
+    QList<CollectionViewModel *> m_collections;
+    MangaReaderViewModel *m_preview;
+
+    QList<TagViewModel *> m_tags;
 };
 
 #endif

@@ -2,29 +2,30 @@ import QtQuick 2.14
 import QtQuick.Layouts 1.14
 import QtQuick.Controls 2.14
 
-StackLayout {
-    currentIndex: 0
+Loader {
+    id: pages
+    source: "PageLibrary.qml"
     enum Page { Library, Detail, Reader }
 
     function navigate(page) {
         if (page == Pages.Page.Library)
-            currentIndex = 0
+            source = "PageLibrary.qml"
         else if (page == Pages.Page.Detail)
-            currentIndex = 1
+            source = "PageDetail.qml"
         else if (page == Pages.Page.Reader)
-            currentIndex = 2
+            source = "PageReader.qml"
+    }
+
+    function gotoPageReader(index) {
+        setSource("PageReader.qml", {"index": index});
     }
 
     function isPage(page) {
         if (page == Pages.Page.Library)
-            return currentIndex == 0
+            return source == "PageLibrary.qml"
         else if (page == Pages.Page.Detail)
-            return currentIndex == 1
+            return source == "PageDetail.qml"
         else if (page == Pages.Page.Reader)
-            return currentIndex == 2
+            return source == "PageReader.qml"
     }
-
-    PageLibrary { id: pageLibrary }
-    PageDetail { id: pageDetail }
-    PageReader { id: pageReader }
 }
