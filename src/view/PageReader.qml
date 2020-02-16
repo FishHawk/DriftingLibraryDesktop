@@ -83,42 +83,21 @@ Item {
         ColumnLayout {
             anchors.fill: parent
             Label { text: index + " / " + (viewModel.images.length - 1)}
-            ListView {
+            Loader {
+                id: loader
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                spacing: 2
-                orientation: ListView.Horizontal
-                model: viewModel.images
-                currentIndex: index
-                preferredHighlightBegin: width / 2 - 200
-                preferredHighlightEnd: width / 2 + 200
-                highlightRangeMode: ListView.StrictlyEnforceRange
-                highlightMoveDuration: 200
-                highlightMoveVelocity: -1
-                delegate: Image {
-                    height: parent.height
-                    sourceSize.width: width; sourceSize.height: height
-                    fillMode: Image.PreserveAspectFit
-                    smooth: false
-                    source: viewModel.url + modelData
-                    MouseArea {
-                        anchors.fill: parent
-                        onClicked: root.index = index
-                    }
+                asynchronous: true
+                source: "ImagePreview.qml"
+                Binding {
+                    target: loader.item
+                    property: "currentIndex"
+                    value: root.index
+                    when: loader.status == Loader.Ready
                 }
-                Component.onCompleted: currentIndex = root.index
-
-                MouseArea {
-                    anchors.fill: parent
-                    propagateComposedEvents: true
-                    onWheel: {
-                        let new_index = index - wheel.angleDelta.y / 120
-                        new_index = new_index < 0 ? 0 : new_index
-                        new_index = new_index > (viewModel.images.length - 1) ? (viewModel.images.length - 1) : new_index
-                        index = new_index
-                    }
-                }
+                onLoaded: item.currentIndex = root.index
             }
+
             Slider {
                 Layout.fillWidth: true
                 value: root.index

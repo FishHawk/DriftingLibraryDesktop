@@ -8,6 +8,7 @@
         <file>Entry.qml</file>
         <file>TagEntry.qml</file>
         <file>Tag.qml</file>
+        <file>ImagePreview.qml</file>
         <file>BrowserMangaGrid.qml</file>
         <file>ButtonGrid.qml</file>
         <file>BrowserChapterDepth0.qml</file>
