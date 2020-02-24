@@ -1,12 +1,14 @@
-#include "tag_view_model.hpp"
+#include "manga_tag_model.hpp"
 
 #include <QJsonDocument>
 #include <QJsonObject>
 
-QList<TagViewModel *> TagViewModel::parseJson(QJsonArray tags_json) {
-    QList<TagViewModel *> tags;
+using model::TagModel;
+
+QList<TagModel *> TagModel::parseJson(QJsonArray tags_json) {
+    QList<TagModel *> tags;
     for (const auto &tag_json : tags_json) {
-        auto tag = new TagViewModel();
+        auto tag = new TagModel();
 
         tag->m_key = tag_json.toObject().value("key").toString();
         for (const auto &value_json : tag_json.toObject().value("value").toArray()) {
@@ -25,7 +27,7 @@ QList<TagViewModel *> TagViewModel::parseJson(QJsonArray tags_json) {
     return tags;
 }
 
-QList<TagViewModel *> TagViewModel::loadFromLocalFile(QDir manga_dir) {
+QList<TagModel *> TagModel::loadFromLocalFile(QDir manga_dir) {
     QFile tags_file(manga_dir.filePath("tags.json"));
     tags_file.open(QIODevice::ReadOnly | QIODevice::Text);
     QJsonArray tags_json = QJsonDocument::fromJson(tags_file.readAll()).object().value("tags").toArray();
@@ -34,7 +36,7 @@ QList<TagViewModel *> TagViewModel::loadFromLocalFile(QDir manga_dir) {
 }
 
 
-void TagViewModel::createDefaultFile(QDir manga_dir) {
+void TagModel::createDefaultFile(QDir manga_dir) {
     QFile tags_file(manga_dir.filePath("tags.json"));
     if (!tags_file.exists()) {
         QJsonObject tags_json;

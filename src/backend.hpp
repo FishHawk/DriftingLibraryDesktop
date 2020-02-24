@@ -12,24 +12,25 @@
 #include <QtCore/QObject>
 
 #include "library.hpp"
-#include "view_model/manga_library_view_model.hpp"
-#include "view_model/manga_detail_view_model.hpp"
-#include "view_model/manga_reader_view_model.hpp"
+#include "model/local/library_model.hpp"
+#include "model/remote/library_model.hpp"
+#include "model/local/manga_model.hpp"
+#include "model/remote/manga_model.hpp"
 
 class Backend : public QObject {
     Q_OBJECT
 
 public:
     Q_PROPERTY(QUrl libraryUrl READ libraryUrl NOTIFY libraryUrlChanged)
-    Q_PROPERTY(MangaLibraryViewModel* mangaLibraryViewModel MEMBER m_manga_library_view_model NOTIFY mangaLibraryViewModelChanged)
-    Q_PROPERTY(MangaDetailViewModel *mangaDetailViewModel MEMBER m_manga_detail_view_model NOTIFY mangaDetailViewModelChanged)
-    Q_PROPERTY(MangaReaderViewModel *mangaReaderViewModel MEMBER m_manga_reader_view_model NOTIFY mangaReaderViewModelChanged)
+    Q_PROPERTY(model::LibraryModel *mangaLibraryViewModel MEMBER m_manga_library_view_model NOTIFY mangaLibraryViewModelChanged)
+    Q_PROPERTY(model::MangaModel *mangaDetailViewModel MEMBER m_manga_detail_view_model NOTIFY mangaDetailViewModelChanged)
+    Q_PROPERTY(QList<QUrl> chapterImageModel MEMBER m_chapter_image_model NOTIFY chapterImageModelChanged)
 
 signals:
     void libraryUrlChanged();
     void mangaLibraryViewModelChanged();
     void mangaDetailViewModelChanged();
-    void mangaReaderViewModelChanged();
+    void chapterImageModelChanged();
 
 public:
     Backend();
@@ -52,9 +53,9 @@ public:
 private:
     QSettings m_settings{"settings"};
     LibraryAddress m_library_address;
-    MangaLibraryViewModel *m_manga_library_view_model;
-    MangaDetailViewModel *m_manga_detail_view_model;
-    MangaReaderViewModel *m_manga_reader_view_model;
+    model::LibraryModel *m_manga_library_view_model;
+    model::MangaModel *m_manga_detail_view_model;
+    QList<QUrl> m_chapter_image_model;
 
     int m_collection_index;
     int m_chapter_index;

@@ -7,8 +7,7 @@
 #include "library.hpp"
 
 Backend::Backend()
-    : m_manga_detail_view_model(new MangaDetailViewModel),
-      m_manga_reader_view_model(new MangaReaderViewModel) {
+    : m_manga_detail_view_model(nullptr) {
     setLibraryUrl(m_settings.value("libraryUrl", "").toString());
 }
 
@@ -23,7 +22,14 @@ bool Backend::setLibraryUrl(QString str) {
         m_settings.setValue("libraryUrl", library_url);
         emit libraryUrlChanged();
 
-        m_manga_library_view_model = new MangaLibraryViewModel(library_url);
+        // for test
+        // m_manga_library_view_model = new model::local::LibraryModel(library_url);
+        m_manga_library_view_model = new model::remote::LibraryModel(QUrl("http://172.18.0.1:8080/api/"));
+        // if (library_url.isLocalFile()) {
+        //     m_manga_library_view_model = new model::local::LibraryModel(library_url);
+        // } else {
+        //     m_manga_library_view_model = new model::remote::LibraryModel(library_url);
+        // }
         emit mangaLibraryViewModelChanged();
         return true;
     } else {
@@ -32,8 +38,7 @@ bool Backend::setLibraryUrl(QString str) {
 }
 
 void Backend::openManga(QString manga_title) {
-    auto manga_url = m_library_address.mangaUrl(manga_title);
-    auto new_view_model = new MangaDetailViewModel(manga_url);
+    auto new_view_model = m_manga_library_view_model->openManga(manga_title);
 
     std::swap(new_view_model, m_manga_detail_view_model);
     emit mangaDetailViewModelChanged();
@@ -44,18 +49,8 @@ void Backend::openManga(QString manga_title) {
 void Backend::openChapter(int collection_index, int chapter_index) {
     m_collection_index = collection_index;
     m_chapter_index = chapter_index;
-
-    auto collection = m_manga_detail_view_model->m_collections[m_collection_index];
-    auto chapter = collection->m_chapters[m_chapter_index];
-    auto chapter_url = m_library_address.chapterUrl(m_manga_detail_view_model->m_title,
-                                                    collection->m_title,
-                                                    chapter);
-    auto new_view_model = new MangaReaderViewModel(chapter_url);
-
-    std::swap(new_view_model, m_manga_reader_view_model);
-    emit mangaReaderViewModelChanged();
-    if (new_view_model != nullptr)
-        delete new_view_model;
+    m_chapter_image_model = m_manga_detail_view_model->openChapter(collection_index, chapter_index);
+    emit chapterImageModelChanged();
 }
 
 bool Backend::openPrevChapter() {
@@ -85,6 +80,5 @@ bool Backend::openNextChapter() {
         return false;
     }
     openChapter(m_collection_index, m_chapter_index);
-    // qDebug() <<m_chapter_index;
     return true;
 }

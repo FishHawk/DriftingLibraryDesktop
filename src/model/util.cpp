@@ -20,3 +20,8 @@ QString util::search_thumb(QDir dir, unsigned int depth) {
     }
     return "";
 }
+
+QNetworkAccessManager *util::get_nam() {
+    static QNetworkAccessManager *nam = new QNetworkAccessManager;
+    return nam;
+}

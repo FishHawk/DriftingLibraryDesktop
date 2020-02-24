@@ -10,7 +10,7 @@ GridView {
     cellWidth: cellSize + 20
     cellHeight: cellSize/3*4 + 20 + 20
     clip: true
-    model: preview.images
+    model: preview.length
     delegate: delegateComponent
 
     Component {
@@ -24,7 +24,7 @@ GridView {
                 asynchronous: true
                 fillMode: Image.PreserveAspectFit
                 smooth: false
-                source: preview.url + modelData
+                source:  preview[index]
             }
             Label {
                 x: 10 ; y: 10 + cellSize/3*4

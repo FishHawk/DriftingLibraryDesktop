@@ -1,4 +1,4 @@
-#include "manga_detail_view_model.hpp"
+#include "manga_model.hpp"
 
 #include <QCollator>
 #include <QFile>
@@ -6,11 +6,13 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 
-#include "view_model/util.hpp"
+#include "model/util.hpp"
 
-MangaDetailViewModel::MangaDetailViewModel(QUrl manga_url)
-    : m_preview{nullptr} {
-    QDir manga_dir(manga_url.toLocalFile());
+using model::local::MangaModel;
+
+MangaModel::MangaModel(QUrl url)
+    : ::model::MangaModel(url) {
+    QDir manga_dir(url.toLocalFile());
     m_title = manga_dir.dirName();
     m_thumb = QUrl::fromLocalFile(util::search_thumb(manga_dir));
 
@@ -18,7 +20,7 @@ MangaDetailViewModel::MangaDetailViewModel(QUrl manga_url)
     QCollator collator;
     collator.setNumericMode(true);
 
-    auto default_collection = new CollectionViewModel("");
+    auto default_collection = new CollectionModel("");
     auto level1_folders = manga_dir.entryList(QDir::AllDirs | QDir::NoDotAndDotDot);
     if (level1_folders.isEmpty()) {
         default_collection->add_chapter("");
@@ -32,7 +34,7 @@ MangaDetailViewModel::MangaDetailViewModel(QUrl manga_url)
                 m_depth = 1;
             } else {
                 std::sort(level2_folders.begin(), level2_folders.end(), collator);
-                auto collection = new CollectionViewModel(level1_folder_name);
+                auto collection = new CollectionModel(level1_folder_name);
                 for (const auto &level2_folder_name : level2_folders) {
                     collection->add_chapter(level2_folder_name);
                 }
@@ -44,10 +46,28 @@ MangaDetailViewModel::MangaDetailViewModel(QUrl manga_url)
     if (m_depth < 2)
         m_collections.append(default_collection);
     if (m_depth == 0) {
-        m_preview = new MangaReaderViewModel(manga_url);
+        m_preview = this->openChapter(0, 0);
     }
 
     // load tags
-    TagViewModel::createDefaultFile(manga_dir);
-    m_tags = TagViewModel::loadFromLocalFile(manga_dir);
+    TagModel::createDefaultFile(manga_dir);
+    m_tags = TagModel::loadFromLocalFile(manga_dir);
+}
+
+QList<QUrl> MangaModel::openChapter(unsigned int collection_index, unsigned int chapter_index) {
+    auto collection = m_collections[collection_index];
+    auto chapter = collection->m_chapters[chapter_index];
+    QUrl chapter_url = m_url.toString() + "/" + collection->m_title + "/" + chapter;
+    QDir chapter_dir(chapter_url.toLocalFile());
+
+    auto images = chapter_dir.entryList(util::image_name_filters(), QDir::Files);
+    QCollator collator;
+    collator.setNumericMode(true);
+    std::sort(images.begin(), images.end(), collator);
+
+    QList<QUrl> image_urls;
+    for (const auto &image : images) {
+        image_urls.append(QUrl::fromLocalFile(chapter_dir.filePath(image)));
+    }
+    return image_urls;
 }

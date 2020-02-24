@@ -31,7 +31,7 @@ GridView {
         }
         MouseArea {
             anchors.fill: parent
-            onClicked: mangaChoosed(title)
+            onClicked: mangaChoosed(mangaId)
         }
     }
 }

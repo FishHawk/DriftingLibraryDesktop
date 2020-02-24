@@ -10,7 +10,7 @@ Grid {
     spacing: 10
 
     Repeater {
-        model: viewModel.tagEntrys
+        model: viewModel.tags
         Label {
             width: 80
             font.pointSize: 12
@@ -19,7 +19,7 @@ Grid {
     }
 
     Repeater {
-        model: viewModel.tagEntrys
+        model: viewModel.tags
         Flow {
             id: tags
 

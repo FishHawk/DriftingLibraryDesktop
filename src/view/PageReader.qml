@@ -7,7 +7,7 @@ import Backend 1.0
 Item {
     id: root
 
-    property var viewModel: Backend.mangaReaderViewModel
+    property var imageModel: Backend.chapterImageModel
     property int index
 
     function back() {
@@ -19,11 +19,11 @@ Item {
             index -= 1
         else {
             Backend.openPrevChapter()
-            index = viewModel.images.length - 1
+            index = imageModel.length - 1
         }
     }
     function nextPage() {
-        if (index < viewModel.images.length - 1)
+        if (index < imageModel.length - 1)
             index += 1
         else {
             Backend.openNextChapter()
@@ -46,15 +46,15 @@ Item {
     Image {
         id: image
         anchors.fill: parent
-        visible: viewModel.images.length != 0
+        visible: imageModel.length != 0
         fillMode: Image.PreserveAspectFit
-        source: viewModel.images.length != 0 ? viewModel.url + viewModel.images[index] : ""
+        source: imageModel.length != 0 ? imageModel[index] : ""
         // need test, to reduce Moire pattern
         // mipmap: true
     }
     Label {
         anchors.centerIn: parent
-        visible: viewModel.images.length == 0
+        visible: imageModel.length == 0
         text: "No Image"
         font.pointSize: 80
     }
@@ -82,26 +82,26 @@ Item {
 
         ColumnLayout {
             anchors.fill: parent
-            Label { text: index + " / " + (viewModel.images.length - 1)}
-            Loader {
-                id: loader
-                Layout.fillWidth: true
-                Layout.fillHeight: true
-                asynchronous: true
-                source: "ImagePreview.qml"
-                Binding {
-                    target: loader.item
-                    property: "currentIndex"
-                    value: root.index
-                    when: loader.status == Loader.Ready
-                }
-                onLoaded: item.currentIndex = root.index
-            }
+            Label { text: index + " / " + (imageModel.length - 1)}
+            // Loader {
+            //     id: loader
+            //     Layout.fillWidth: true
+            //     Layout.fillHeight: true
+            //     asynchronous: true
+            //     source: "ImagePreview.qml"
+            //     Binding {
+            //         target: loader.item
+            //         property: "currentIndex"
+            //         value: root.index
+            //         when: loader.status == Loader.Ready
+            //     }
+            //     onLoaded: item.currentIndex = root.index
+            // }
 
             Slider {
                 Layout.fillWidth: true
                 value: root.index
-                from: 0; to: viewModel.images.length - 1
+                from: 0; to: imageModel.length - 1
                 stepSize: 1.0
                 onValueChanged: root.index = parseInt(value)
             }
@@ -114,7 +114,7 @@ Item {
         onWheel: {
             let new_index = index - wheel.angleDelta.y / 120
             new_index = new_index < 0 ? 0 : new_index
-            new_index = new_index > (viewModel.images.length - 1) ? (viewModel.images.length - 1) : new_index
+            new_index = new_index > (imageModel.length - 1) ? (imageModel.length - 1) : new_index
             index = new_index
         }
     }

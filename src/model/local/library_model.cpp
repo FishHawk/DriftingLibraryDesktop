@@ -1,22 +1,20 @@
-#include "manga_library_view_model.hpp"
+#include "model/local/library_model.hpp"
 
 #include <QCollator>
-#include <QDebug>
 #include <QDir>
 #include <QDirIterator>
 
-#include "view_model/util.hpp"
+#include "model/local/manga_model.hpp"
+#include "model/util.hpp"
 
-MangaLibraryViewModel::MangaLibraryViewModel(LibraryAddress library_address)
-    : m_library_address(library_address) {
+using model::local::LibraryModel;
+
+LibraryModel::LibraryModel(QUrl url)
+    : ::model::LibraryModel(url) {
     load();
 }
 
-MangaLibraryViewModel::~MangaLibraryViewModel() {
-    clear();
-}
-
-void MangaLibraryViewModel::query(QString patterns) {
+void LibraryModel::query(QString patterns) {
     m_tag_filter.set(patterns);
 
     beginResetModel();
@@ -25,16 +23,16 @@ void MangaLibraryViewModel::query(QString patterns) {
     endResetModel();
 }
 
-void MangaLibraryViewModel::load() {
-    QDir library_dir(m_library_address.libraryUrl().toLocalFile());
+void LibraryModel::load() {
+    QDir library_dir(m_url.toLocalFile());
     auto manga_titles = library_dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
 
     // filter
     if (!m_tag_filter.empty()) {
         QStringList filtered_manga_title;
         for (const auto &title : manga_titles) {
-            QDir manga_dir = m_library_address.mangaUrl(title).toLocalFile();
-            auto tags = TagViewModel::loadFromLocalFile(manga_dir);
+            QDir manga_dir = QUrl(m_url.toString() + '/' + title + '/').toLocalFile();
+            auto tags = TagModel::loadFromLocalFile(manga_dir);
 
             if (m_tag_filter.check(title, tags))
                 filtered_manga_title << title;
@@ -50,15 +48,12 @@ void MangaLibraryViewModel::load() {
 
     // load
     for (const auto &title : manga_titles) {
-        QDir manga_dir = m_library_address.mangaUrl(title).toLocalFile();
+        QDir manga_dir = QUrl(m_url.toString() + '/' + title + '/').toLocalFile();
         QUrl thumb = QUrl::fromLocalFile(util::search_thumb(manga_dir));
-        m_mangas.push_back(new MangaSummary{title, thumb});
+        m_mangas.push_back(new MangaSummary{title, title, thumb});
     }
 }
 
-void MangaLibraryViewModel::clear() {
-    for (auto manga : m_mangas) {
-        delete manga;
-    }
-    m_mangas.clear();
+model::MangaModel *LibraryModel::openManga(QString id) {
+    return new model::local::MangaModel(m_url.toString() + "/" + id);
 }

@@ -7,20 +7,24 @@
 #include <QJsonArray>
 #include <QObject>
 
-class TagViewModel : public QObject {
+namespace model {
+
+class TagModel : public QObject {
     Q_OBJECT
 public:
     Q_PROPERTY(QString key MEMBER m_key CONSTANT)
     Q_PROPERTY(QStringList value MEMBER m_value CONSTANT)
     Q_PROPERTY(QColor color MEMBER m_color CONSTANT)
 
-    static QList<TagViewModel *> parseJson(QJsonArray tags_json);
-    static QList<TagViewModel *> loadFromLocalFile(QDir manga_dir);
+    static QList<TagModel *> parseJson(QJsonArray tags_json);
+    static QList<TagModel *> loadFromLocalFile(QDir manga_dir);
     static void createDefaultFile(QDir manga_dir);
 
     QString m_key;
     QStringList m_value;
     QColor m_color;
 };
+
+}
 
 #endif

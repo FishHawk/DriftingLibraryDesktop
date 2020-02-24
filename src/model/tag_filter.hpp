@@ -1,11 +1,10 @@
 #ifndef TAG_FILTER
 #define TAG_FILTER
 
-#include <QDebug>
 #include <QString>
 #include <vector>
 
-#include "tag_view_model.hpp"
+#include "manga_tag_model.hpp"
 
 class TagFilter {
 public:
@@ -39,7 +38,7 @@ public:
         }
     }
 
-    bool check(const QString &title, const QList<TagViewModel *> &tags) const {
+    bool check(const QString &title, const QList<model::TagModel *> &tags) const {
         for (const auto &pattern : m_patterns) {
             bool is_passed = pattern.is_exclusion_mode;
 

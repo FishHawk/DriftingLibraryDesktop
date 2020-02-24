@@ -1,29 +1,33 @@
-#ifndef MANGA_LIST_VIEW_MODEL
-#define MANGA_LIST_VIEW_MODEL
+#ifndef MODEL_LIBRARY_MODEL_HPP
+#define MODEL_LIBRARY_MODEL_HPP
 
 #include <QAbstractListModel>
 #include <QObject>
 #include <QUrl>
 
-#include "library.hpp"
-#include "view_model/tag_filter.hpp"
+#include "model/manga_model.hpp"
+#include "model/tag_filter.hpp"
+
+namespace model {
 
 struct MangaSummary {
+    QString id;
     QString title;
     QUrl thumb;
 };
 
-class MangaLibraryViewModel : public QAbstractListModel {
+class LibraryModel : public QAbstractListModel {
     Q_OBJECT
 
 public:
     enum MangaSummaryRole {
-        TitleRole = Qt::UserRole + 1,
+        IdRole = Qt::UserRole + 1,
+        TitleRole,
         ThumbRole
     };
 
-    explicit MangaLibraryViewModel(LibraryAddress library_address);
-    ~MangaLibraryViewModel();
+    explicit LibraryModel(QUrl library_address);
+    virtual ~LibraryModel();
 
     int rowCount(const QModelIndex &) const override {
         return m_mangas.size();
@@ -33,7 +37,9 @@ public:
         if (!index.isValid() || index.row() < 0 || index.row() >= m_mangas.size())
             return QVariant();
 
-        if (role == MangaSummaryRole::TitleRole)
+        if (role == MangaSummaryRole::IdRole)
+            return QVariant::fromValue(m_mangas.at(index.row())->id);
+        else if (role == MangaSummaryRole::TitleRole)
             return QVariant::fromValue(m_mangas.at(index.row())->title);
         else if (role == MangaSummaryRole::ThumbRole)
             return QVariant::fromValue(m_mangas.at(index.row())->thumb);
@@ -41,24 +47,26 @@ public:
             return QVariant();
     }
 
-    Q_INVOKABLE void query(QString patterns);
+    Q_INVOKABLE virtual void query(QString patterns) = 0;
+    virtual MangaModel *openManga(QString id) = 0;
 
 protected:
     QHash<int, QByteArray> roleNames() const override {
         QHash<int, QByteArray> roles;
+        roles[MangaSummaryRole::IdRole] = "mangaId";
         roles[MangaSummaryRole::TitleRole] = "title";
         roles[MangaSummaryRole::ThumbRole] = "thumb";
         return roles;
     };
 
-private:
-    void load();
     void clear();
 
     int m_size;
-    LibraryAddress m_library_address;
+    QUrl m_url;
     TagFilter m_tag_filter;
     std::vector<MangaSummary *> m_mangas;
 };
+
+} // namespace model
 
 #endif
