@@ -7,7 +7,7 @@ import Backend 1.0
 RowLayout {
     id: root
 
-    property var viewModel: Backend.mangaDetailViewModel
+    property var viewModel: Backend.mangaModel
 
     spacing: 0
 

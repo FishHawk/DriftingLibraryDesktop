@@ -18,14 +18,14 @@ Rectangle {
             Layout.preferredWidth: 800
             placeholderText: "Search Library"
             onAccepted: {
-                Backend.mangaLibraryViewModel.query(text)
+                Backend.libraryModel.query(text)
                 focus = false
             }
         }
         BrowserMangaGrid {
             Layout.fillWidth: true
             Layout.fillHeight: true
-            model: Backend.mangaLibraryViewModel
+            model: Backend.libraryModel
             onMangaChoosed: {
                 Backend.openManga(mangaSummary)
                 pages.navigate(Pages.Page.Detail)
@@ -33,11 +33,23 @@ Rectangle {
         }
         RowLayout {
             Button {
-                text: "Set Library"
+                text: "Manage Library"
                 onClicked: dialog.open()
             }
+            ComboBox{
+                function getAddress() {
+                    if (delegateModel && currentIndex >= 0)
+                        return delegateModel.items.get(currentIndex).model.address
+                    else
+                        return "unset"
+                }
+                id: librarySelector
+                textRole: "name"
+                model: Backend.entrancesModel
+                onActivated: Backend.openLibrary(currentIndex)
+            }
             Label {
-                text: "Library Url:   " + Backend.libraryUrl
+                text: "Library Url:   " + librarySelector.getAddress()
             }
         }
     }
@@ -55,7 +67,7 @@ Rectangle {
             TextField {
                 id: inputUrl;
                 Layout.fillWidth: true;
-                text: Backend.libraryUrl
+                // text: Backend.libraryUrl
             }
         }
         onAccepted: {
