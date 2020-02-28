@@ -17,9 +17,9 @@ int main(int argc, char *argv[]) {
     QApplication::setApplicationVersion("0.1.0");
 
     // initialize data and config dir
-    QString dataLocation = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
-    QString configLocation = QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
-    for (const QString &location : {dataLocation, configLocation})
+    QString data_location = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+    QString config_location = QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
+    for (const QString &location : {data_location, config_location})
         if (!QDir(location).mkpath("."))
             qFatal("Could not create dir: %s", qPrintable(location));
 
