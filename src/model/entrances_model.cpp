@@ -3,6 +3,7 @@
 #include "model/local/library_model.hpp"
 #include "model/remote/library_model.hpp"
 
+#include <QDebug>
 using model::EntrancesModel;
 
 EntrancesModel::EntrancesModel() {
@@ -29,6 +30,23 @@ QVariant EntrancesModel::data(const QModelIndex &index, int role) const {
         return QVariant();
 }
 
+bool EntrancesModel::setData(const QModelIndex &index, const QVariant &value, int role) {
+    if (index.row() < 0 || index.row() >= m_entrances.size())
+        return false;
+
+    auto &entrance = m_entrances[index.row()];
+    if (role == LibraryEntranceRole::NameRole) {
+        entrance.name = value.toString();
+        emit dataChanged(index, index);
+        return true;
+    } else if (role == LibraryEntranceRole::AddressRole) {
+        entrance.address = QUrl::fromUserInput(value.toString());
+        emit dataChanged(index, index);
+        return true;
+    }
+    return false;
+}
+
 QHash<int, QByteArray> EntrancesModel::roleNames() const {
     QHash<int, QByteArray> roles;
     roles[LibraryEntranceRole::NameRole] = "name";
@@ -36,12 +54,32 @@ QHash<int, QByteArray> EntrancesModel::roleNames() const {
     return roles;
 }
 
+bool EntrancesModel::insertRow(int row, const QModelIndex &parent) {
+    if (row < 0 || row > m_entrances.size())
+        return false;
+    beginInsertRows(parent, row, row);
+    m_entrances.insert(m_entrances.begin() + row, LibraryEntrance{"default", QUrl()});
+    endInsertRows();
+    return true;
+}
+
+bool EntrancesModel::removeRow(int row, const QModelIndex &parent) {
+    if (row < 0 || row >= m_entrances.size())
+        return false;
+    beginRemoveRows(parent, row, row);
+    m_entrances.erase(m_entrances.begin() + row);
+    endRemoveRows();
+    return true;
+}
+
 model::LibraryModel *EntrancesModel::openLibrary(unsigned int index) {
     if (index >= m_entrances.size())
         return nullptr;
 
     auto library_url = m_entrances[index].address;
-    if (library_url.isLocalFile()) {
+    if (!library_url.isValid())
+        return nullptr;
+    else if (library_url.isLocalFile()) {
         return new model::local::LibraryModel(library_url);
     } else {
         return new model::remote::LibraryModel(library_url);

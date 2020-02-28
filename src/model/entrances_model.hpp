@@ -22,9 +22,16 @@ public:
 
     int rowCount(const QModelIndex &) const override;
     QVariant data(const QModelIndex &index, int role) const override;
+    bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
     QHash<int, QByteArray> roleNames() const override;
 
-    LibraryModel* openLibrary(unsigned int index);
+    bool insertRow(int row, const QModelIndex &parent = QModelIndex());
+    bool removeRow(int row, const QModelIndex &parent = QModelIndex());
+
+    Q_INVOKABLE bool create() { return insertRow(m_entrances.size()); }
+    Q_INVOKABLE bool remove(int row) { return removeRow(row); }
+
+    LibraryModel *openLibrary(unsigned int index);
 
 private:
     struct LibraryEntrance {

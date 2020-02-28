@@ -57,22 +57,58 @@ Rectangle {
 
     Dialog {
         id: dialog
-        title: "Set Library Url"
-        width: 800
+        title: "Manage Library"
+        width: 600
+        height: 400
         standardButtons: Dialog.Ok | Dialog.Cancel
 
-        RowLayout {
+        ColumnLayout {
             anchors.fill: parent
-            Label { text: "Library Url:   " }
-            TextField {
-                id: inputUrl;
-                Layout.fillWidth: true;
-                // text: Backend.libraryUrl
+            RowLayout {
+                Layout.fillWidth: true
+                Label {
+                    Layout.preferredWidth: 100;
+                    horizontalAlignment: Text.AlignHCenter;
+                    text: "Name"
+                }
+                Label {
+                    Layout.fillWidth: true;
+                    horizontalAlignment: Text.AlignHCenter;
+                    text: "Address"
+                }
+                Button {
+                    text: "Add"
+                    onClicked: Backend.entrancesModel.create()
+                }
+            }
+            ListView {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                model: Backend.entrancesModel
+                delegate: RowLayout {
+                    width: parent.width
+                    TextField {
+                        Layout.preferredWidth: 100;
+                        text: name
+                        onEditingFinished: model.name = text
+                    }
+                    TextField {
+                        Layout.fillWidth: true;
+                        text: address
+                        onEditingFinished: model.address = text
+                    }
+                    Button {
+                        text: "Delete"
+                        onClicked: Backend.entrancesModel.remove(index)
+                    }
+                }
             }
         }
+
         onAccepted: {
-            queryTextInput.text = "";
-            Backend.setLibraryUrl(inputUrl.text)
+            queryTextInput.text = ""
+            librarySelector.currentIndex = 0
+            librarySelector.activated(librarySelector.currentIndex)
         }
     }
 }
