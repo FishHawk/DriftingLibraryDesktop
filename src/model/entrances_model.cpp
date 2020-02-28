@@ -1,14 +1,28 @@
 #include "entrances_model.hpp"
 
+#include <QDir>
+#include <QJsonArray>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QStandardPaths>
+
 #include "model/local/library_model.hpp"
 #include "model/remote/library_model.hpp"
 
-#include <QDebug>
 using model::EntrancesModel;
 
 EntrancesModel::EntrancesModel() {
-    m_entrances.push_back(LibraryEntrance{"local", QUrl::fromLocalFile("/home/wh/Projects/DriftingLibrary/default")});
-    m_entrances.push_back(LibraryEntrance{"remote", QUrl("http://172.18.0.1:8080/api/")});
+    QString config_location = QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
+    QFile file(QDir(config_location).filePath("library_entrances.json"));
+    file.open(QIODevice::ReadOnly | QIODevice::Text);
+    QJsonArray entrances_json = QJsonDocument::fromJson(file.readAll()).array();
+    file.close();
+
+    for (const auto &entrance_json : entrances_json) {
+        QString name = entrance_json.toObject().value("name").toString();
+        QUrl address = entrance_json.toObject().value("address").toString();
+        m_entrances.push_back(LibraryEntrance{name, address});
+    }
 }
 
 EntrancesModel::~EntrancesModel() {
@@ -70,6 +84,22 @@ bool EntrancesModel::removeRow(int row, const QModelIndex &parent) {
     m_entrances.erase(m_entrances.begin() + row);
     endRemoveRows();
     return true;
+}
+
+void EntrancesModel::save() {
+    QJsonArray entrances_json;
+    for (const auto &entrance : m_entrances) {
+        QJsonObject entrance_json;
+        entrance_json["name"] = entrance.name;
+        entrance_json["address"] = entrance.address.toString();
+        entrances_json.append(entrance_json);
+    }
+    QJsonDocument json(entrances_json);
+    QString config_location = QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
+    QFile file(QDir(config_location).filePath("library_entrances.json"));
+    file.open(QIODevice::WriteOnly | QIODevice::Text);
+    file.write(json.toJson());
+    file.close();
 }
 
 model::LibraryModel *EntrancesModel::openLibrary(unsigned int index) {

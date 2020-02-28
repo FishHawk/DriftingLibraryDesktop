@@ -109,6 +109,7 @@ Rectangle {
             queryTextInput.text = ""
             librarySelector.currentIndex = 0
             librarySelector.activated(librarySelector.currentIndex)
+            Backend.entrancesModel.save()
         }
     }
 }

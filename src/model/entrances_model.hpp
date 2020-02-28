@@ -30,6 +30,7 @@ public:
 
     Q_INVOKABLE bool create() { return insertRow(m_entrances.size()); }
     Q_INVOKABLE bool remove(int row) { return removeRow(row); }
+    Q_INVOKABLE void save();
 
     LibraryModel *openLibrary(unsigned int index);
 
