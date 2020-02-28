@@ -12,7 +12,7 @@ Item {
 
     function back() {
         index = 0
-        pages.navigate(Pages.Page.Detail)
+        pages.back()
     }
     function prevPage() {
         if (index > 0)
@@ -23,6 +23,7 @@ Item {
         }
     }
     function nextPage() {
+        console.log("test")
         if (index < imageModel.length - 1)
             index += 1
         else {

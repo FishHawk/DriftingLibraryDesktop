@@ -8,6 +8,7 @@ RowLayout {
     id: root
 
     property var viewModel: Backend.mangaModel
+    visible: viewModel
 
     spacing: 0
 
@@ -22,7 +23,7 @@ RowLayout {
 
             Button {
                 text: "back"
-                onClicked: pages.navigate(Pages.Page.Library)
+                onClicked: pages.back()
             }
 
             Image {
@@ -46,7 +47,6 @@ RowLayout {
         color: palette.base
 
         Loader {
-            id: y
             anchors.fill: parent
             signal chapterChoosed(int collection, int chapter, int index)
             property var collections: root.viewModel.collections

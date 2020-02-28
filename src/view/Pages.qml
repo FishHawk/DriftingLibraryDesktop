@@ -2,22 +2,28 @@ import QtQuick 2.14
 import QtQuick.Layouts 1.14
 import QtQuick.Controls 2.14
 
-Loader {
+StackLayout {
     id: pages
-    source: "PageLibrary.qml"
-    focus: true
-    enum Page { Library, Detail, Reader }
 
-    function navigate(page) {
-        if (page == Pages.Page.Library)
-            source = "PageLibrary.qml"
-        else if (page == Pages.Page.Detail)
-            source = "PageDetail.qml"
-        else if (page == Pages.Page.Reader)
-            source = "PageReader.qml"
+    function back() {
+        if (currentIndex > 0)
+            currentIndex = currentIndex - 1
+    }
+
+    function gotoPageDetail() {
+        if (pageDetail.source == "")
+            pageDetail.source = "PageDetail.qml"
+        currentIndex = 1
     }
 
     function gotoPageReader(index) {
-        setSource("PageReader.qml", {"index": index});
+        if (pageReader.source == "")
+            pageReader.source = "PageReader.qml"
+        pageReader.item.index = index
+        currentIndex = 2
     }
+
+    PageLibrary { id: pageLibrary }
+    Loader { id: pageDetail }
+    Loader { id: pageReader; focus: pages.currentIndex == 2 }
 }

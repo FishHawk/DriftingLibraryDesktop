@@ -28,7 +28,7 @@ Rectangle {
             model: Backend.libraryModel
             onMangaChoosed: {
                 Backend.openManga(mangaSummary)
-                pages.navigate(Pages.Page.Detail)
+                pages.gotoPageDetail()
             }
         }
         RowLayout {
