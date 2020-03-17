@@ -31,7 +31,8 @@ Grid {
             Repeater {
                 model: modelData.value
                 Tag {
-                    color: tags.tagColor
+                    // color: tags.tagColor
+                    color: "grey"
                     text: modelData
                 }
             }

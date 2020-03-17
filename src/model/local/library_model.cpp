@@ -32,7 +32,9 @@ void LibraryModel::load() {
         QStringList filtered_manga_title;
         for (const auto &title : manga_titles) {
             QDir manga_dir = QUrl(m_url.toString() + '/' + title + '/').toLocalFile();
-            auto tags = TagModel::loadFromLocalFile(manga_dir);
+
+            auto metadata = MetadataModel::loadMetadataFile(manga_dir);
+            auto tags = MetadataModel::get_tags(metadata);
 
             if (m_tag_filter.check(title, tags))
                 filtered_manga_title << title;

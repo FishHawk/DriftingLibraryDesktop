@@ -4,7 +4,7 @@
 #include <QString>
 #include <vector>
 
-#include "manga_tag_model.hpp"
+#include "manga_metadata_model.hpp"
 
 class TagFilter {
 public:

@@ -1,10 +1,11 @@
-#ifndef TAG_VIEW_MODEL
-#define TAG_VIEW_MODEL
+#ifndef METADATA_VIEW_MODEL
+#define METADATA_VIEW_MODEL
 
 #include <QColor>
-#include <QFile>
 #include <QDir>
+#include <QFile>
 #include <QJsonArray>
+#include <QJsonObject>
 #include <QObject>
 
 namespace model {
@@ -14,17 +15,22 @@ class TagModel : public QObject {
 public:
     Q_PROPERTY(QString key MEMBER m_key CONSTANT)
     Q_PROPERTY(QStringList value MEMBER m_value CONSTANT)
-    Q_PROPERTY(QColor color MEMBER m_color CONSTANT)
 
     static QList<TagModel *> parseJson(QJsonArray tags_json);
-    static QList<TagModel *> loadFromLocalFile(QDir manga_dir);
-    static void createDefaultFile(QDir manga_dir);
 
     QString m_key;
     QStringList m_value;
     QColor m_color;
 };
 
-}
+class MetadataModel : public QObject {
+    Q_OBJECT
+public:
+    static void createDefaultMetadataFile(QDir manga_dir);
+    static QJsonObject loadMetadataFile(QDir manga_dir);
+    static QList<TagModel *> get_tags(QJsonObject metadata);
+};
+
+} // namespace model
 
 #endif

@@ -7,7 +7,7 @@
 #include <QUrl>
 
 #include "model/manga_content_model.hpp"
-#include "model/manga_tag_model.hpp"
+#include "model/manga_metadata_model.hpp"
 
 namespace model {
 

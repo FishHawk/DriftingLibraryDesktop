@@ -23,7 +23,6 @@ Item {
         }
     }
     function nextPage() {
-        console.log("test")
         if (index < imageModel.length - 1)
             index += 1
         else {
@@ -44,27 +43,42 @@ Item {
     Keys.onUpPressed: openMenu()
     Keys.onDownPressed: closeMenu()
 
-    Image {
-        id: image
+    ListView {
+        id: test
         anchors.fill: parent
-        visible: imageModel.length != 0
-        fillMode: Image.PreserveAspectFit
-        source: imageModel.length != 0 ? imageModel[index] : ""
-        // need test, to reduce Moire pattern
-        // mipmap: true
+        highlightMoveDuration: 0
+        highlightMoveVelocity: -1
+        currentIndex: index
+        model: imageModel.length
+        delegate: Image {
+            width: test.width
+            height: test.height
+            asynchronous: true
+            fillMode: Image.PreserveAspectFit
+            source: imageModel[index]
+        }
     }
-    Label {
-        anchors.centerIn: parent
-        visible: imageModel.length == 0
-        text: "No Image"
-        font.pointSize: 80
-    }
-    Label {
-        anchors.centerIn: parent
-        visible: image.status == Image.Error
-        text: "Image Error"
-        font.pointSize: 80
-    }
+    // Image {
+    //     id: image
+    //     anchors.fill: parent
+    //     visible: imageModel.length != 0
+    //     fillMode: Image.PreserveAspectFit
+    //     source: imageModel.length != 0 ? imageModel[index] : ""
+    //     // need test, to reduce Moire pattern
+    //     // mipmap: true
+    // }
+    // Label {
+    //     anchors.centerIn: parent
+    //     visible: imageModel.length == 0
+    //     text: "No Image"
+    //     font.pointSize: 80
+    // }
+    // Label {
+    //     anchors.centerIn: parent
+    //     visible: image.status == Image.Error
+    //     text: "Image Error"
+    //     font.pointSize: 80
+    // }
 
     RowLayout {
         anchors.fill: parent

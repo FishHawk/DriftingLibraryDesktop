@@ -49,9 +49,9 @@ MangaModel::MangaModel(QUrl url)
         m_preview = this->openChapter(0, 0);
     }
 
-    // load tags
-    TagModel::createDefaultFile(manga_dir);
-    m_tags = TagModel::loadFromLocalFile(manga_dir);
+    // load metadata
+    auto metadata = MetadataModel::loadMetadataFile(manga_dir);
+    m_tags = MetadataModel::get_tags(metadata);
 }
 
 QList<QUrl> MangaModel::openChapter(unsigned int collection_index, unsigned int chapter_index) {

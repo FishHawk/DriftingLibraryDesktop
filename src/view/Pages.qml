@@ -18,8 +18,10 @@ StackLayout {
 
     function gotoPageReader(index) {
         if (pageReader.source == "")
-            pageReader.source = "PageReader.qml"
-        pageReader.item.index = index
+            pageReader.setSource("PageReader.qml", {"index": index})
+            // pageReader.source = "PageReader.qml"
+        else
+            pageReader.item.index = index
         currentIndex = 2
     }
 

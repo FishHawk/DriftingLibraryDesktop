@@ -16,7 +16,7 @@ add_executable(drifting-library-desktop
         view/resources.qrc
         model/entrances_model.cpp
         model/library_model.cpp
-        model/manga_tag_model.cpp
+        model/manga_metadata_model.cpp
         model/manga_content_model.cpp
         model/manga_model.cpp
         model/local/library_model.cpp
