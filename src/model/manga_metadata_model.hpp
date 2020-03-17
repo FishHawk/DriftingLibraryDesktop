@@ -16,7 +16,7 @@ public:
     Q_PROPERTY(QString key MEMBER m_key CONSTANT)
     Q_PROPERTY(QStringList value MEMBER m_value CONSTANT)
 
-    static QList<TagModel *> parseJson(QJsonArray tags_json);
+    static QList<TagModel *> parseJson(const QJsonArray& tags_json);
 
     QString m_key;
     QStringList m_value;
@@ -26,9 +26,10 @@ public:
 class MetadataModel : public QObject {
     Q_OBJECT
 public:
-    static void createDefaultMetadataFile(QDir manga_dir);
-    static QJsonObject loadMetadataFile(QDir manga_dir);
-    static QList<TagModel *> get_tags(QJsonObject metadata);
+    static void createDefaultMetadataFile(const QDir &manga_dir);
+    static QJsonObject loadMetadataFile(const QDir &manga_dir);
+    static QList<TagModel *> get_tags(const QJsonObject &metadata);
+    static QString get_title(const QJsonObject &metadata);
 };
 
 } // namespace model

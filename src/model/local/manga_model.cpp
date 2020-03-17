@@ -13,8 +13,16 @@ using model::local::MangaModel;
 MangaModel::MangaModel(QUrl url)
     : ::model::MangaModel(url) {
     QDir manga_dir(url.toLocalFile());
-    m_title = manga_dir.dirName();
     m_thumb = QUrl::fromLocalFile(util::search_thumb(manga_dir));
+
+    // load metadata
+    auto metadata = MetadataModel::loadMetadataFile(manga_dir);
+
+    auto title = MetadataModel::get_title(metadata);
+    if (title.isEmpty()) m_title = manga_dir.dirName();
+    else m_title = title;
+
+    m_tags = MetadataModel::get_tags(metadata);
 
     // load collections
     QCollator collator;
@@ -49,9 +57,6 @@ MangaModel::MangaModel(QUrl url)
         m_preview = this->openChapter(0, 0);
     }
 
-    // load metadata
-    auto metadata = MetadataModel::loadMetadataFile(manga_dir);
-    m_tags = MetadataModel::get_tags(metadata);
 }
 
 QList<QUrl> MangaModel::openChapter(unsigned int collection_index, unsigned int chapter_index) {

@@ -6,7 +6,7 @@
 using model::MetadataModel;
 using model::TagModel;
 
-QList<TagModel *> TagModel::parseJson(QJsonArray tags_json) {
+QList<TagModel *> TagModel::parseJson(const QJsonArray& tags_json) {
     QList<TagModel *> tags;
     for (const auto &tag_json : tags_json) {
         auto tag = new TagModel();
@@ -21,7 +21,7 @@ QList<TagModel *> TagModel::parseJson(QJsonArray tags_json) {
     return tags;
 }
 
-void MetadataModel::createDefaultMetadataFile(QDir manga_dir) {
+void MetadataModel::createDefaultMetadataFile(const QDir& manga_dir) {
     QFile metadata_file(manga_dir.filePath("metadata.json"));
     if (!metadata_file.exists()) {
         QJsonObject default_metadata;
@@ -32,7 +32,7 @@ void MetadataModel::createDefaultMetadataFile(QDir manga_dir) {
     }
 }
 
-QJsonObject MetadataModel::loadMetadataFile(QDir manga_dir) {
+QJsonObject MetadataModel::loadMetadataFile(const QDir& manga_dir) {
     createDefaultMetadataFile(manga_dir);
 
     QFile metadata_file(manga_dir.filePath("metadata.json"));
@@ -43,6 +43,10 @@ QJsonObject MetadataModel::loadMetadataFile(QDir manga_dir) {
     return metadata;
 }
 
-QList<TagModel *> MetadataModel::get_tags(QJsonObject metadata) {
+QList<TagModel *> MetadataModel::get_tags(const QJsonObject& metadata) {
     return TagModel::parseJson(metadata.value("tags").toArray());
+}
+
+QString MetadataModel::get_title(const QJsonObject &metadata) {
+    return metadata.value("title").toString();
 }
