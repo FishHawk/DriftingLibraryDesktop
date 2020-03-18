@@ -23,15 +23,12 @@ Grid {
         Flow {
             id: tags
 
-            property color tagColor: modelData.color
-
             width: root.width - 90
             spacing: 10
 
             Repeater {
                 model: modelData.value
                 Tag {
-                    // color: tags.tagColor
                     color: "grey"
                     text: modelData
                 }
