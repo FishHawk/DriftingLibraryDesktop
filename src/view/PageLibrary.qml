@@ -9,6 +9,11 @@ import Backend 1.0
 Rectangle {
     color: palette.base
 
+    function query(query_string) {
+        Backend.libraryModel.query(query_string)
+        queryTextInput.text = query_string
+    }
+
     ColumnLayout {
         anchors.fill: parent
 
