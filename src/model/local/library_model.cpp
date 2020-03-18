@@ -5,7 +5,7 @@
 #include <QDirIterator>
 
 #include "model/local/manga_model.hpp"
-#include "model/util.hpp"
+#include "model/manga_content_model.hpp"
 
 using model::local::LibraryModel;
 
@@ -51,7 +51,7 @@ void LibraryModel::load() {
     // load
     for (const auto &title : manga_titles) {
         QDir manga_dir = QUrl(m_url.toString() + '/' + title + '/').toLocalFile();
-        QUrl thumb = QUrl::fromLocalFile(util::search_thumb(manga_dir));
+        QUrl thumb = ContentModel::get_thumb(manga_dir);
         m_mangas.push_back(new MangaSummary{title, title, thumb});
     }
 }

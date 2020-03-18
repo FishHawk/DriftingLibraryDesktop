@@ -16,7 +16,7 @@ public:
     Q_PROPERTY(QString key MEMBER m_key CONSTANT)
     Q_PROPERTY(QStringList value MEMBER m_value CONSTANT)
 
-    static QList<TagModel *> parseJson(const QJsonArray& tags_json);
+    static QList<TagModel *> parseJson(const QJsonArray &tags_json);
 
     QString m_key;
     QStringList m_value;

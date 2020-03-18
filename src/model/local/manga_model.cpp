@@ -6,57 +6,28 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 
-#include "model/util.hpp"
-
 using model::local::MangaModel;
 
 MangaModel::MangaModel(QUrl url)
     : ::model::MangaModel(url) {
     QDir manga_dir(url.toLocalFile());
-    m_thumb = QUrl::fromLocalFile(util::search_thumb(manga_dir));
 
     // load metadata
     auto metadata = MetadataModel::loadMetadataFile(manga_dir);
 
-    auto title = MetadataModel::get_title(metadata);
-    if (title.isEmpty()) m_title = manga_dir.dirName();
-    else m_title = title;
+    m_title = MetadataModel::get_title(metadata);
+    if (m_title.isEmpty())
+        m_title = manga_dir.dirName();
 
     m_tags = MetadataModel::get_tags(metadata);
 
     // load collections
-    QCollator collator;
-    collator.setNumericMode(true);
+    m_thumb = ContentModel::get_thumb(manga_dir);
+    m_depth = ContentModel::detact_dir_depth(manga_dir);
+    m_collections = ContentModel::get_collections(manga_dir, m_depth);
 
-    auto default_collection = new CollectionModel("");
-    auto level1_folders = manga_dir.entryList(QDir::AllDirs | QDir::NoDotAndDotDot);
-    if (level1_folders.isEmpty()) {
-        default_collection->add_chapter("");
-        m_depth = 0;
-    } else {
-        std::sort(level1_folders.begin(), level1_folders.end(), collator);
-        for (const auto &level1_folder_name : level1_folders) {
-            auto level2_folders = QDir(manga_dir.filePath(level1_folder_name)).entryList(QDir::AllDirs | QDir::NoDotAndDotDot);
-            if (level2_folders.isEmpty()) {
-                default_collection->add_chapter(level1_folder_name);
-                m_depth = 1;
-            } else {
-                std::sort(level2_folders.begin(), level2_folders.end(), collator);
-                auto collection = new CollectionModel(level1_folder_name);
-                for (const auto &level2_folder_name : level2_folders) {
-                    collection->add_chapter(level2_folder_name);
-                }
-                m_collections.append(collection);
-                m_depth = 2;
-            }
-        }
-    }
-    if (m_depth < 2)
-        m_collections.append(default_collection);
-    if (m_depth == 0) {
+    if (m_depth == 0)
         m_preview = this->openChapter(0, 0);
-    }
-
 }
 
 QList<QUrl> MangaModel::openChapter(unsigned int collection_index, unsigned int chapter_index) {
@@ -65,7 +36,10 @@ QList<QUrl> MangaModel::openChapter(unsigned int collection_index, unsigned int 
     QUrl chapter_url = m_url.toString() + "/" + collection->m_title + "/" + chapter;
     QDir chapter_dir(chapter_url.toLocalFile());
 
-    auto images = chapter_dir.entryList(util::image_name_filters(), QDir::Files);
+    auto images = chapter_dir.entryList(QStringList() << "*.jpg"
+                                                      << "*.jpeg"
+                                                      << "*.png",
+                                        QDir::Files);
     QCollator collator;
     collator.setNumericMode(true);
     std::sort(images.begin(), images.end(), collator);

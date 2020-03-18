@@ -6,8 +6,6 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 
-#include "model/util.hpp"
-
 using namespace model;
 
 MangaModel::MangaModel(QUrl manga_url)
